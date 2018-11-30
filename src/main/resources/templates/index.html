@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>StackOverflowClient</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link  th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>
+<style type="text/css">
+.title {
+    text-align: center;
+    margin: 10px;
+}
+.search-form {
+    width: 80%;
+    margin: 0 auto;
+}
+input#title {
+    width: 87%;
+}
+.form-group.search-form-wrapper {
+    width: 100%;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div class="title"><h1>StackOverflowClient</h1></div>
+		<div class="search-form">
+		    <form action="#" th:action="@{/}" th:object="${filters}" method="post" class="form-inline">
+		     	<div class="form-group search-form-wrapper">
+		        	<input type="text" th:field="*{title}" class="form-control" placeholder="Поиск"/>
+		        	<button type="submit" name="action" value="search" class="btn btn-info"><span class="glyphicon glyphicon-search" data-toggle="tooltip" data-placement="top" title="Найти"></span></button>
+		        	<button type="submit" name="action" value="clear" class="btn btn-secondary"><span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="top" title="Очистить"></span></button>
+		        </div>
+		    </form>
+		</div>
+		<div class="search-result">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th scope="col" class="col-sm-1"></th>
+						<th scope="col" class="form-group col-sm-6">Заголовок</th>
+						<th scope="col" class="form-group col-sm-2">Автор</th>
+						<th scope="col" class="form-group col-sm-2">Дата создания</th>
+						<th scope="col" class="form-group col-sm-1">Всего ответов</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${items.empty}">
+						<td colspan="5">No items Available</td>
+					</tr>
+					<tr th:each="item : ${items}">
+						<th scope="row">
+							<span th:if="${item.answered}" class="glyphicon glyphicon-ok-sign text-success" data-toggle="tooltip" data-placement="top" title="Решено"></span>
+							<span th:if="${!item.answered}" class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="top" title="Не решено"></span>
+						</th>
+						<td><a th:href="${item.link}" target="_blank"><span th:text="${item.title}" data-toggle="tooltip" data-placement="top" title="Перейти к оригиналу"></span></a></td>
+						<td><span th:text="${item.stackExchangeOwner.displayName}" data-toggle="tooltip" data-placement="top" title="Автор"> Author </span></td>
+						<td><span th:text="${@utils.formatUnixTime(item.creationDate)}" data-toggle="tooltip" data-placement="top" title="Дата создания"> creation_date </span></td>
+						<td><span th:text="${item.answerCount}" data-toggle="tooltip" data-placement="top" title="Количество ответов"></span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
